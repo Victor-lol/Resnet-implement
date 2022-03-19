@@ -99,7 +99,7 @@ class LeaveDataset(Dataset):
         img_as_img = transform(img_as_img)  #图像处理
         
         if self.mode == 'test':
-            return img_as_img  #测试集只需要返回图像
+            return img_as_img #测试集只需要返回图像
         else: #训练以及测试有效性
             # 得到图像的 string label
             label = self.label_arr[index]   #例子self.label_arr[0] = maclura_pomifera
@@ -119,18 +119,6 @@ def load_data(dataset, batch_size, n_workers, sampler):
         sampler=sampler
     )
 
-
-def evaluate(pred, label):
-
-    # p_macro = sum((Counter(pred) & Counter(label)).values()) / sum(pred)
-    # mAP = np.mean(p_macro)
-
-    acc = 0
-    for i in range(len(pred)):
-        if pred[i] == label[i]:
-            acc += 1
-
-    return acc / len(pred)
 
 
 

@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import torch.optim as optim
 from tensorboardX import SummaryWriter
-from utils import LeaveDataset, load_data, evaluate
+from utils import LeaveDataset, load_data
 from torch.utils.data.sampler import RandomSampler,SequentialSampler
 from args import get_train_valid_args
 from model import ResNet
@@ -10,9 +10,6 @@ import torch.nn as nn
 import os
 import numpy as np
 
-# def init_weights(m):
-#     if type(m) in [nn.Linear, nn.Conv2d]:
-#     	nn.init.xavier_uniform_(m.weight)
 
 def train(model, 
           data_loader, 
@@ -68,7 +65,7 @@ def valid(model,
 			pbar.update(batch_size)
 			accs.append(acc)
 		
-		pbar.set_postfix(epoch=epoch, acc=sum(accs)/len(accs))
+		pbar.set_postfix(epoch=epoch, acc=(sum(accs)/len(accs)).cpu().numpy())
 	return acc
 
 def save(model, save_dir, epoch, optimizer, best_score):
@@ -108,7 +105,7 @@ if __name__ == "__main__":
 
 	n_class = len(train_dataset)
 	model = ResNet(n_class).to(device)
-	# model.apply(init_weights)
+
 	params = filter(lambda param: param.requires_grad, model.parameters())
 	optimizer = optim.AdamW(
 		params=params, lr=args.lr, betas=(args.beta1, args.beta2),\
